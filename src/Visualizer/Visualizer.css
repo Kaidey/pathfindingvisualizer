@@ -1,0 +1,10 @@
+#grid {
+  position: fixed;
+  bottom: 2%;
+  outline: 1px solid black;
+}
+#menu {
+  position: fixed;
+  top: 10%;
+  outline: 1px solid black;
+}
