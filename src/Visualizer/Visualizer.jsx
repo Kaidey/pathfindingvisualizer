@@ -4,20 +4,32 @@ import Menu from "../Menu/Menu";
 
 import "./Visualizer.css";
 
+const NODES = {
+  WALL_NODE: "wall",
+  START_NODE: "start",
+  END_NODE: "end"
+};
+
 export default class Visualizer extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      nodeToPlace: NODES.WALL_NODE
+    };
   }
+
+  setNodeToPlace = nodeType => {
+    this.setState({ nodeToPlace: nodeType });
+  };
 
   render() {
     return (
       <div className="main">
         <div id="menu">
-          <Menu />
+          <Menu selectNode={this.setNodeToPlace} nodes={NODES} />
         </div>
         <div id="grid">
-          <Grid />
+          <Grid nodeToPlace={this.state.nodeToPlace} />
         </div>
       </div>
     );

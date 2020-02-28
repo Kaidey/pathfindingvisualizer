@@ -7,6 +7,24 @@ export default class Menu extends Component {
   }
 
   render() {
-    return <div className="menu"></div>;
+    return (
+      <div className="menu">
+        <button
+          type="button"
+          onClick={() => this.props.selectNode(this.props.nodes.WALL_NODE)}>
+          Wall
+        </button>
+        <button
+          type="button"
+          onClick={() => this.props.selectNode(this.props.nodes.START_NODE)}>
+          Start
+        </button>
+        <button
+          type="button"
+          onClick={() => this.props.selectNode(this.props.nodes.END_NODE)}>
+          End
+        </button>
+      </div>
+    );
   }
 }
