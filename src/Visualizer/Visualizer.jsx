@@ -17,7 +17,8 @@ export default class Visualizer extends Component {
     this.state = {
       nodeToPlace: NODES.WALL_NODE,
       startNode: null,
-      endNode: null
+      endNode: null,
+      mouseDown: false
     };
   }
 
@@ -25,7 +26,8 @@ export default class Visualizer extends Component {
     this.setState({ nodeToPlace: nodeType });
   };
 
-  cellClickHandler = event => {
+  mouseEventHandler = event => {
+    event.preventDefault();
     const tableNode = ReactDOM.findDOMNode(this);
     const clickedCellID = event.target.id;
     const cell = tableNode.querySelector(`#${clickedCellID}`);
@@ -74,7 +76,12 @@ export default class Visualizer extends Component {
           <Menu selectNode={this.setNodeToPlace} nodes={NODES} />
         </div>
         <div id="grid">
-          <Grid cellClickHandler={this.cellClickHandler} />
+          <Grid
+            mouseEventHandler={this.mouseEventHandler}
+            setMouseDownFalse={() => this.setState({ mouseDown: false })}
+            setMouseDownTrue={() => this.setState({ mouseDown: true })}
+            mouseDown={this.state.mouseDown}
+          />
         </div>
       </div>
     );

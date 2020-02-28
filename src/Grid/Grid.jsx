@@ -31,7 +31,7 @@ export default class Grid extends Component {
     const grid = this.state.grid;
     return (
       <>
-        <table id="grid">
+        <table id="grid" onMouseLeave={this.props.setMouseDownFalse}>
           <tbody>
             {grid.map((row, rowIdx) => {
               return (
@@ -42,9 +42,16 @@ export default class Grid extends Component {
                         key={cellIdx}
                         id={`node_${rowIdx}_${cellIdx}`}
                         className="unvisited"
-                        onClick={event =>
-                          this.props.cellClickHandler(event)
-                        }></td>
+                        onMouseDown={event => {
+                          this.props.mouseEventHandler(event);
+                          this.props.setMouseDownTrue();
+                        }}
+                        onMouseUp={this.props.setMouseDownFalse}
+                        onMouseOver={event => {
+                          if (this.props.mouseDown) {
+                            this.props.mouseEventHandler(event);
+                          }
+                        }}></td>
                     );
                   })}
                 </tr>
