@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import "./Grid.css";
 
 export default class Grid extends Component {
@@ -13,14 +12,6 @@ export default class Grid extends Component {
   componentDidMount() {
     const grid = this.getInitialGrid();
     this.setState({ grid });
-  }
-
-  cellClickHandler(event) {
-    const tableNode = ReactDOM.findDOMNode(this);
-    const clickedCellID = event.target.id;
-    const cell = tableNode.querySelector(`#${clickedCellID}`);
-
-    cell.className = this.props.nodeToPlace;
   }
 
   getInitialGrid() {
@@ -44,13 +35,16 @@ export default class Grid extends Component {
           <tbody>
             {grid.map((row, rowIdx) => {
               return (
-                <tr id={`row_${rowIdx}`}>
+                <tr key={rowIdx} id={`row_${rowIdx}`}>
                   {row.map((cell, cellIdx) => {
                     return (
                       <td
+                        key={cellIdx}
                         id={`node_${rowIdx}_${cellIdx}`}
                         className="unvisited"
-                        onClick={event => this.cellClickHandler(event)}></td>
+                        onClick={event =>
+                          this.props.cellClickHandler(event)
+                        }></td>
                     );
                   })}
                 </tr>
