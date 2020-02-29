@@ -24,6 +24,9 @@ export default class Menu extends Component {
           onClick={() => this.props.selectNode(this.props.nodes.END_NODE)}>
           End
         </button>
+        <button type="button" onClick={() => this.props.runDijkstra()}>
+          Run
+        </button>
       </div>
     );
   }

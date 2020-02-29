@@ -8,3 +8,4 @@
 - Limitation to the number of start and end nodes (there can only be 1 of each)
 - A node can't be placed over an existing node (className != unvisited)
 - It is possible to add walls by clicking a cell and then dragging the mouse over the grid
+- Implemented dijkstra's algorithm visualization
