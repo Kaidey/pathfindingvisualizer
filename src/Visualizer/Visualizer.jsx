@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Grid from "./Grid/Grid";
 import Menu from "./Menu/Menu";
-import Dijkstra from "../Algorithms/Dijkstra";
 
 import "./Visualizer.css";
 
@@ -15,31 +14,33 @@ export default class Visualizer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nodeToPlace: NODES.WALL_NODE,
-      startNode: null,
-      endNode: null,
-      mouseDown: false,
-      grid: [],
-      tableElement: null
+      grid: []
     };
+
+    this.nodeToPlace = NODES.WALL_NODE;
+    this.startNode = null;
+    this.endNode = null;
+    this.mouseDown = false;
+    this.algorithm = null;
+    this.tableElement = null;
   }
 
   componentDidMount() {
     const grid = getInitialGrid();
+    this.tableElement = document.getElementById("grid");
     this.setState({
-      grid: grid,
-      tableElement: document.getElementById("grid")
+      grid: grid
     });
   }
 
   setNodeToPlace = nodeType => {
-    this.setState({ nodeToPlace: nodeType });
+    this.nodeToPlace = nodeType;
   };
 
   mouseEventHandler = event => {
     event.preventDefault();
     const clickedCellID = event.target.id;
-    const cell = this.state.tableElement.querySelector(`#${clickedCellID}`);
+    const cell = this.tableElement.querySelector(`#${clickedCellID}`);
 
     if (cell.className === "unvisited") {
       cell.className = this.validateNode(clickedCellID);
@@ -49,14 +50,12 @@ export default class Visualizer extends Component {
   //Checks if there is already a start node and an end node
   //Returns the css class that corresponds to the selected node
   validateNode = clickedCellID => {
-    const { nodeToPlace, startNode, endNode } = this.state;
-
     let row = parseInt(clickedCellID.split("_")[1]);
     let col = parseInt(clickedCellID.split("_")[2]);
 
     let node = this.state.grid[row][col];
 
-    switch (nodeToPlace) {
+    switch (this.nodeToPlace) {
       case 0:
         const updateGrid = this.state.grid;
         updateGrid[row][col].isWall = true;
@@ -64,26 +63,26 @@ export default class Visualizer extends Component {
         return "wall";
 
       case 1:
-        if (startNode) {
-          let element = this.state.tableElement.querySelector(
-            `#node_${startNode.row}_${startNode.col}`
+        if (this.startNode) {
+          let element = this.tableElement.querySelector(
+            `#node_${this.startNode.row}_${this.startNode.col}`
           );
           element.className = "unvisited";
         }
 
-        this.setState({ startNode: node });
+        this.startNode = node;
 
         return "start";
 
       case 2:
-        if (endNode) {
-          let element = this.state.tableElement.querySelector(
-            `#node_${endNode.row}_${endNode.col}`
+        if (this.endNode) {
+          let element = this.tableElement.querySelector(
+            `#node_${this.endNode.row}_${this.endNode.col}`
           );
           element.className = "unvisited";
         }
 
-        this.setState({ endNode: node });
+        this.endNode = node;
 
         return "end";
 
@@ -95,6 +94,8 @@ export default class Visualizer extends Component {
   clearBoard = () => {
     this.setState({ grid: getInitialGrid() });
     const rows = document.getElementById("tableBody").children;
+    this.startNode = null;
+    this.endNode = null;
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i].children;
@@ -106,11 +107,11 @@ export default class Visualizer extends Component {
 
   animateDijkstra = (sp, visited) => {
     let i = 1;
-    const end = this.state.tableElement.querySelector(
-      `#node_${this.state.endNode.row}_${this.state.endNode.col}`
+    const end = this.tableElement.querySelector(
+      `#node_${this.endNode.row}_${this.endNode.col}`
     );
     visited.forEach(node => {
-      const cell = this.state.tableElement.querySelector(
+      const cell = this.tableElement.querySelector(
         `#node_${node.row}_${node.col}`
       );
       if (cell === end) {
@@ -131,7 +132,7 @@ export default class Visualizer extends Component {
   animateSPNodes = sp => {
     let j = 1;
     sp.forEach(node => {
-      const cell = this.state.tableElement.querySelector(
+      const cell = this.tableElement.querySelector(
         `#node_${node.row}_${node.col}`
       );
 
@@ -144,15 +145,22 @@ export default class Visualizer extends Component {
     });
   };
 
-  runDijkstra = () => {
-    let Dij = new Dijkstra(
-      this.state.grid,
-      this.state.startNode,
-      this.state.endNode
-    );
-    let results = Dij.run();
-
-    this.animateDijkstra(results.sp, results.visited);
+  runAlgo = () => {
+    if (this.algorithm && this.startNode && this.endNode) {
+      import(`../Algorithms/${this.algorithm}`).then(algo => {
+        let algoInstance = new algo.default(
+          this.state.grid,
+          this.startNode,
+          this.endNode
+        );
+        let results = algoInstance.run();
+        this.animateDijkstra(results.sp, results.visited);
+      });
+    } else {
+      window.alert(
+        "Something's missing! Check if you placed both start and end nodes nad if you chose an algorithm"
+      );
+    }
   };
 
   render() {
@@ -162,16 +170,19 @@ export default class Visualizer extends Component {
           <Menu
             selectNode={this.setNodeToPlace}
             nodes={NODES}
-            runDijkstra={this.runDijkstra}
+            runAlgo={this.runAlgo}
             clearBoard={this.clearBoard}
+            updateAlgo={algoName => {
+              this.algorithm = algoName;
+            }}
           />
         </div>
         <div id="grid">
           <Grid
             mouseEventHandler={this.mouseEventHandler}
-            setMouseDownFalse={() => this.setState({ mouseDown: false })}
-            setMouseDownTrue={() => this.setState({ mouseDown: true })}
-            mouseDown={this.state.mouseDown}
+            setMouseDownFalse={() => (this.mouseDown = false)}
+            setMouseDownTrue={() => (this.mouseDown = true)}
+            mouseDown={this.mouseDown}
             grid={this.state.grid}
           />
         </div>

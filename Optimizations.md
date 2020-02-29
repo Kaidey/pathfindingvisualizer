@@ -1,2 +1,3 @@
 - Cell class changing (if mouseOver is too fast some cells are skipped )
 - Change the way nodes are identified as walls in the pathfinding algorithms (currently updating the state (grid) everytime a wall is placed)
+- Animations seem slow, should take some time to review the performance of my code regarding that aspect

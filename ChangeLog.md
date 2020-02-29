@@ -9,3 +9,5 @@
 - A node can't be placed over an existing node (className != unvisited)
 - It is possible to add walls by clicking a cell and then dragging the mouse over the grid
 - Implemented dijkstra's algorithm visualization
+- Implemented button to clear the board
+- Implemented algorithm selections
