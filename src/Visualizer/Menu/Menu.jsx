@@ -27,6 +27,12 @@ export default class Menu extends Component {
         <button type="button" onClick={() => this.props.runDijkstra()}>
           Run
         </button>
+        <button type="button" onClick={() => this.props.clearBoard()}>
+          Clear Board
+        </button>
+        <button type="button" onClick={() => this.props.seeGrid()}>
+          See
+        </button>
       </div>
     );
   }

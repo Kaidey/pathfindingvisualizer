@@ -20,7 +20,27 @@ table {
 
 .visited {
   border: 1px solid rgb(0, 0, 0);
-  background-color: rgb(45, 25, 223);
+  animation: animateVisited;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes animateVisited {
+  0% {
+    background-color: white;
+    border-radius: 0%;
+  }
+  25% {
+    background-color: lightblue;
+    border-radius: 25%;
+  }
+  50% {
+    background-color: lightskyblue;
+  }
+  100% {
+    background-color: rgb(52, 16, 212);
+  }
 }
 
 .start {
@@ -41,4 +61,23 @@ table {
 .shortestPath {
   border: 1px solid rgb(0, 0, 0);
   background-color: rgb(149, 194, 27);
+  animation: animateSP;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes animateSP {
+  0% {
+    background-color: white;
+  }
+  25% {
+    background-color: rgb(155, 154, 89);
+  }
+  50% {
+    background-color: rgb(148, 146, 46);
+  }
+  100% {
+    background-color: rgb(233, 236, 8);
+  }
 }

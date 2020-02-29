@@ -37,7 +37,6 @@ export default class Dijkstra {
 
     return queue;
   }
-
   //Follow the path property of each visited node starting at the end node to build the full shortest path from start to end (reverse at the end)
   computeSP(end) {
     let sp = [];

@@ -12,7 +12,7 @@ export default class Grid extends Component {
     return (
       <>
         <table id="grid" onMouseLeave={this.props.setMouseDownFalse}>
-          <tbody>
+          <tbody id="tableBody">
             {grid.map((row, rowIdx) => {
               return (
                 <tr key={rowIdx} id={`row_${rowIdx}`}>
