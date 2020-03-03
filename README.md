@@ -1,6 +1,6 @@
 # Pathfinding Visualizer 
 
-React project meant to give the user a visualization of multiple pathfinding algorithms and (hopefully) a good medium to support the understanding of those algorithms 
+React project meant to give the user a visualization of multiple pathfinding algorithms and (hopefully) a good medium to support the understanding of those algorithms . You can play with it on https://kaidey.github.io/pathfindingvisualizer/
 
 ## Inspiration
 
