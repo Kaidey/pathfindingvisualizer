@@ -12,6 +12,10 @@
 - Menu styling
 - Algorithm execution animations
 
+### Fixed
+
+- Algorithms no longer explore the inner nodes of a walled area if that area contains the end node and thus it is unreachable (no path from start to end)
+
 # v1.0.0
 
 ### Added

@@ -51,6 +51,12 @@ export default class Dijkstra {
     let sp = [];
     let current = end;
 
+    console.log(end);
+
+    if (!end.path) {
+      return [];
+    }
+
     sp.push(end);
 
     while (current.path) {
@@ -98,12 +104,27 @@ export default class Dijkstra {
         return b.distance - a.distance;
       });
 
-      current = this.queue[this.queue.length - 1];
+      //Safeguard for when the end node is surrounded by walls and thus unreachable
+      //In this case all unvisited nodes inside the walled aread will permanently have a cost of Infinity
+      //If this is the case, at some point the node with the shortest cost in the queue will be on with a cost of Infinity and the algorithm should stop
+      const next = this.queue[this.queue.length - 1];
+      if (next.cost !== Infinity) {
+        current = next;
+      } else {
+        break;
+      }
     }
 
-    let endN = visited.find(aux => {
+    //If the algorithm can't find a path to the end node it won't be added to the visited list
+    let endN = this.queue.find(aux => {
       return aux.row === this.endNode.row && aux.col === this.endNode.col;
     });
+
+    if (!endN) {
+      endN = visited.find(aux => {
+        return aux.row === this.endNode.row && aux.col === this.endNode.col;
+      });
+    }
 
     return { sp: this.computeSP(endN), visited: visited };
   }

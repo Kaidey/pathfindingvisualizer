@@ -26,7 +26,7 @@ export default class Visualizer extends Component {
     this.mouseDown = false;
     this.algorithm = null;
     this.tableElement = null;
-    this.results = [];
+    this.results = { sp: [], visited: [] };
     this.elapsedTime = 0;
   }
 
@@ -140,7 +140,7 @@ export default class Visualizer extends Component {
       const cell = this.tableElement.querySelector(
         `#node_${node.row}_${node.col}`
       );
-      if (cell === end) {
+      if (cell === end && this.results.sp.length !== 0) {
         setTimeout(() => {
           this.animateSPNodes(timeout);
         }, timeout * i);
@@ -216,6 +216,7 @@ export default class Visualizer extends Component {
           results={this.results}
           elapsedTime={this.elapsedTime}
           algorithm={this.algorithm}
+          pathExists={this.results.sp.length === 0 ? false : true}
         />
         <div id="grid">
           <Grid
