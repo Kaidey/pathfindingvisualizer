@@ -105,7 +105,23 @@ export default class Visualizer extends Component {
     }
   };
 
-  animateDijkstra = (sp, visited) => {
+  /* clearPath = () => {
+    this.setState({ grid: getInitialGrid() });
+    const rows = document.getElementById("tableBody").children;
+    this.startNode.cost = Infinity;
+    this.endNode.cost = Infinity;
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i].children;
+      for (let j = 0; j < row.length; j++) {
+        if (row[j].className !== "start" && row[j].className !== "end") {
+          row[j].className = "unvisited";
+        }
+      }
+    }
+  }; */
+
+  animateAlgo = (sp, visited) => {
     let i = 1;
     const end = this.tableElement.querySelector(
       `#node_${this.endNode.row}_${this.endNode.col}`
@@ -153,8 +169,10 @@ export default class Visualizer extends Component {
           this.startNode,
           this.endNode
         );
+        /* console.time("algoTimer"); */
         let results = algoInstance.run();
-        this.animateDijkstra(results.sp, results.visited);
+        this.animateAlgo(results.sp, results.visited);
+        /* console.timeEnd("algoTimer"); */
       });
     } else {
       window.alert(
@@ -172,6 +190,7 @@ export default class Visualizer extends Component {
             nodes={NODES}
             runAlgo={this.runAlgo}
             clearBoard={this.clearBoard}
+            /* clearPath={this.clearPath} */
             updateAlgo={algoName => {
               this.algorithm = algoName;
             }}

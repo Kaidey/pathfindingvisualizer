@@ -1,43 +1,60 @@
-import React, { Component } from "react";
+import React from "react";
+import "./Menu.css";
 
-export default class Menu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <div className="menu">
-        <button
-          type="button"
-          onClick={() => this.props.selectNode(this.props.nodes.WALL_NODE)}>
-          Wall
-        </button>
-        <button
-          type="button"
-          onClick={() => this.props.selectNode(this.props.nodes.START_NODE)}>
-          Start
-        </button>
-        <button
-          type="button"
-          onClick={() => this.props.selectNode(this.props.nodes.END_NODE)}>
-          End
-        </button>
-        <button type="button" onClick={() => this.props.runAlgo()}>
+const Menu = props => {
+  return (
+    <nav id="navbar">
+      <ul id="navbar-list">
+        <li className="dropdown-menu-item">
+          Algorithms
+          <AlgosDropdown updateAlgo={props.updateAlgo}></AlgosDropdown>
+        </li>
+        <li className="dropdown-menu-item">
+          Nodes
+          <NodesDropdown
+            nodes={props.nodes}
+            selectNode={props.selectNode}
+            updateAlgo={props.updateAlgo}></NodesDropdown>
+        </li>
+        <li className="dropdown-menu-item" onClick={() => props.runAlgo()}>
           Run
-        </button>
-        <button type="button" onClick={() => this.props.clearBoard()}>
+        </li>
+        <li className="dropdown-menu-item" onClick={() => props.clearBoard()}>
           Clear Board
-        </button>
-        <select
-          id="algos"
-          value={undefined}
-          onChange={event => this.props.updateAlgo(event.target.value)}>
-          <option hidden>Choose an Algorithm</option>
-          <option value="Dijkstra">Dijkstra</option>
-        </select>
-      </div>
-    );
-  }
-}
+        </li>
+        {/* <li className="dropdown-menu-item" onClick={() => props.clearPath()}>
+          Clear Path
+        </li> */}
+      </ul>
+    </nav>
+  );
+};
+
+export default Menu;
+
+const AlgosDropdown = props => {
+  return (
+    <ul className="dropdown-menu">
+      <li onClick={props.updateAlgo("Dijkstra")}>Dijkstra</li>
+      <li onClick={props.updateAlgo("AStar")}>A*</li>
+    </ul>
+  );
+};
+
+const NodesDropdown = props => {
+  return (
+    <ul className="dropdown-menu">
+      <li value="Wall" onClick={() => props.selectNode(props.nodes.WALL_NODE)}>
+        Wall
+      </li>
+      <li
+        value="Start"
+        onClick={() => props.selectNode(props.nodes.START_NODE)}>
+        Start
+      </li>
+      <li value="End" onClick={() => props.selectNode(props.nodes.END_NODE)}>
+        End
+      </li>
+    </ul>
+  );
+};

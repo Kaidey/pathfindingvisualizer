@@ -30,6 +30,7 @@ export default class Dijkstra {
     grid.forEach(row => {
       row.forEach(cell => {
         if (!cell.isWall) {
+          cell.distance = Infinity;
           queue.push(cell);
         }
       });
@@ -37,6 +38,14 @@ export default class Dijkstra {
 
     return queue;
   }
+
+  calcEuclideanDistance(node) {
+    const xCoords = Math.pow(this.endNode.col - node.col, 2);
+    const yCoords = Math.pow(this.endNode.row - node.row, 2);
+
+    return Math.sqrt(xCoords + yCoords);
+  }
+
   //Follow the path property of each visited node starting at the end node to build the full shortest path from start to end (reverse at the end)
   computeSP(end) {
     let sp = [];
@@ -55,6 +64,7 @@ export default class Dijkstra {
   run() {
     let visited = [];
     let startIdx = this.queue.indexOf(this.startNode);
+    console.log(this.queue);
     let current = this.queue[startIdx];
     current.cost = 0;
 
@@ -73,15 +83,16 @@ export default class Dijkstra {
           if (neigh.cost > aux) {
             neigh.cost = aux;
             neigh.path = current;
+            neigh.distance = this.calcEuclideanDistance(neigh) + neigh.cost;
           }
         }
       });
 
       visited.push(current);
       this.queue.pop();
-      //Sort queue by cost in descending order so the last element is always the next to be visited and thus can be removed (pop()) from the queue easily
+      //Sort queue by distance in descending order so the last element is always the next to be visited and thus can be removed (pop()) from the queue easily
       this.queue.sort((a, b) => {
-        return b.cost - a.cost;
+        return b.distance - a.distance;
       });
 
       current = this.queue[this.queue.length - 1];

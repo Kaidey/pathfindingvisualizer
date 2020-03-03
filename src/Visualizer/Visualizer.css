@@ -2,9 +2,9 @@
   position: fixed;
   bottom: 2%;
   outline: 1px solid black;
+  outline-color: cornflowerblue;
 }
 #menu {
   position: fixed;
-  top: 10%;
-  outline: 1px solid black;
+  top: 2%;
 }

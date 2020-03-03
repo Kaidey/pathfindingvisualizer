@@ -1,3 +1,15 @@
+# v2.0.0
+
+### Added
+
+- Implemented A\* algorithm
+
+### Updated
+
+- Grid styling
+- Menu styling
+- Algorithm execution animations
+
 # v1.0.0
 
 ### Added
