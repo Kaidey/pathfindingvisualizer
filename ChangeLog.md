@@ -3,6 +3,7 @@
 ### Added
 
 - Implemented A\* algorithm
+- Message containing elapsed time, nodes visited and path length after algorithm completion
 
 ### Updated
 

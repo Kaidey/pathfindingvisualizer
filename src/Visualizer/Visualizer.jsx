@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Grid from "./Grid/Grid";
 import Menu from "./Menu/Menu";
+import AlgorithmCompletionMessage from "./AlgorithmCompletionMessage/AlgorithmCompletionMessage";
 
 import "./Visualizer.css";
 
@@ -14,7 +15,9 @@ export default class Visualizer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      grid: []
+      grid: [],
+      running: false,
+      animationComplete: false
     };
 
     this.nodeToPlace = NODES.WALL_NODE;
@@ -23,6 +26,8 @@ export default class Visualizer extends Component {
     this.mouseDown = false;
     this.algorithm = null;
     this.tableElement = null;
+    this.results = [];
+    this.elapsedTime = 0;
   }
 
   componentDidMount() {
@@ -103,6 +108,7 @@ export default class Visualizer extends Component {
         row[j].className = "unvisited";
       }
     }
+    this.setState({ animationComplete: false });
   };
 
   /* clearPath = () => {
@@ -121,33 +127,37 @@ export default class Visualizer extends Component {
     }
   }; */
 
-  animateAlgo = (sp, visited) => {
+  animateAlgo = () => {
     let i = 1;
+    let timeout = 10;
     const end = this.tableElement.querySelector(
       `#node_${this.endNode.row}_${this.endNode.col}`
     );
-    visited.forEach(node => {
+    this.results.visited.forEach(node => {
       const cell = this.tableElement.querySelector(
         `#node_${node.row}_${node.col}`
       );
       if (cell === end) {
         setTimeout(() => {
-          this.animateSPNodes(sp);
-        }, 10 * i);
+          this.animateSPNodes(timeout);
+        }, timeout * i);
       }
 
       if (cell.className !== "start" && cell.className !== "end") {
         setTimeout(() => {
           cell.className = "visited";
-        }, 10 * i);
+        }, timeout * i);
         i++;
       }
     });
+    setTimeout(() => {
+      this.setState({ animationComplete: true });
+    }, timeout * i);
   };
 
-  animateSPNodes = sp => {
+  animateSPNodes = timeout => {
     let j = 1;
-    sp.forEach(node => {
+    this.results.sp.forEach(node => {
       const cell = this.tableElement.querySelector(
         `#node_${node.row}_${node.col}`
       );
@@ -155,7 +165,7 @@ export default class Visualizer extends Component {
       if (cell.className !== "start" && cell.className !== "end") {
         setTimeout(() => {
           cell.className = "shortestPath";
-        }, 30 * j);
+        }, timeout * 3 * j);
         j++;
       }
     });
@@ -169,10 +179,13 @@ export default class Visualizer extends Component {
           this.startNode,
           this.endNode
         );
-        /* console.time("algoTimer"); */
-        let results = algoInstance.run();
-        this.animateAlgo(results.sp, results.visited);
-        /* console.timeEnd("algoTimer"); */
+
+        const start = new Date().getTime();
+        this.results = algoInstance.run();
+        const end = new Date().getTime();
+        this.elapsedTime = end - start;
+
+        this.animateAlgo();
       });
     } else {
       window.alert(
@@ -193,9 +206,14 @@ export default class Visualizer extends Component {
             /* clearPath={this.clearPath} */
             updateAlgo={algoName => {
               this.algorithm = algoName;
-            }}
-          />
+            }}></Menu>
         </div>
+        <AlgorithmCompletionMessage
+          display={this.state.animationComplete}
+          results={this.results}
+          elapsedTime={this.elapsedTime}
+          algorithm={this.algorithm}
+        />
         <div id="grid">
           <Grid
             mouseEventHandler={this.mouseEventHandler}

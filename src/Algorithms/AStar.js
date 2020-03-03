@@ -64,7 +64,6 @@ export default class Dijkstra {
   run() {
     let visited = [];
     let startIdx = this.queue.indexOf(this.startNode);
-    console.log(this.queue);
     let current = this.queue[startIdx];
     current.cost = 0;
 

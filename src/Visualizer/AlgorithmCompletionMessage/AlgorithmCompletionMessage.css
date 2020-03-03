@@ -1,0 +1,18 @@
+#message {
+  position: absolute;
+  top: 25%;
+  left: 0.5%;
+  padding: 0.5%;
+  text-align: center;
+  animation: messagePop;
+  animation-duration: 2s;
+}
+
+@keyframes messagePop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
