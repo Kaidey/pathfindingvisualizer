@@ -4,6 +4,7 @@
 
 - Implemented A\* algorithm
 - Message containing elapsed time, nodes visited and path length after algorithm completion
+- Implemented function to clear the path discovered on an execution and keep the start, end and wall nodes (the user can then run the same or another algorithm with the same grid layout)
 
 ### Updated
 

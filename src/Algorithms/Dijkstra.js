@@ -54,8 +54,12 @@ export default class Dijkstra {
 
   run() {
     let visited = [];
-    let startIdx = this.queue.indexOf(this.startNode);
-    let current = this.queue[startIdx];
+    let endNode = this.queue.find(n => {
+      return n.col === this.endNode.col && n.row === this.endNode.row;
+    });
+    let current = this.queue.find(n => {
+      return n.col === this.startNode.col && n.row === this.startNode.row;
+    });
     current.cost = 0;
 
     //Sort so start node is the last node on the list and can be popped
@@ -64,7 +68,7 @@ export default class Dijkstra {
     });
 
     //While endNode hasn't been visited (Dijkstra adaptation to a 2D grid)
-    while (visited.indexOf(this.endNode) === -1) {
+    while (visited.indexOf(endNode) === -1) {
       let currentNeighbours = this.getNeighbours(current);
 
       currentNeighbours.forEach(neigh => {

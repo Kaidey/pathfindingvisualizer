@@ -22,9 +22,9 @@ const Menu = props => {
         <li className="dropdown-menu-item" onClick={() => props.clearBoard()}>
           Clear Board
         </li>
-        {/* <li className="dropdown-menu-item" onClick={() => props.clearPath()}>
+        <li className="dropdown-menu-item" onClick={() => props.clearPath()}>
           Clear Path
-        </li> */}
+        </li>
       </ul>
     </nav>
   );
@@ -35,8 +35,8 @@ export default Menu;
 const AlgosDropdown = props => {
   return (
     <ul className="dropdown-menu">
-      <li onClick={props.updateAlgo("Dijkstra")}>Dijkstra</li>
-      <li onClick={props.updateAlgo("AStar")}>A*</li>
+      <li onClick={() => props.updateAlgo("Dijkstra")}>Dijkstra</li>
+      <li onClick={() => props.updateAlgo("AStar")}>A*</li>
     </ul>
   );
 };

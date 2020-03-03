@@ -111,21 +111,24 @@ export default class Visualizer extends Component {
     this.setState({ animationComplete: false });
   };
 
-  /* clearPath = () => {
-    this.setState({ grid: getInitialGrid() });
+  clearPath = () => {
+    clearGridPath(this.state.grid);
     const rows = document.getElementById("tableBody").children;
-    this.startNode.cost = Infinity;
-    this.endNode.cost = Infinity;
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i].children;
       for (let j = 0; j < row.length; j++) {
-        if (row[j].className !== "start" && row[j].className !== "end") {
+        if (
+          row[j].className !== "start" &&
+          row[j].className !== "end" &&
+          row[j].className !== "wall"
+        ) {
           row[j].className = "unvisited";
         }
       }
     }
-  }; */
+    this.setState({ animationComplete: false });
+  };
 
   animateAlgo = () => {
     let i = 1;
@@ -203,7 +206,7 @@ export default class Visualizer extends Component {
             nodes={NODES}
             runAlgo={this.runAlgo}
             clearBoard={this.clearBoard}
-            /* clearPath={this.clearPath} */
+            clearPath={this.clearPath}
             updateAlgo={algoName => {
               this.algorithm = algoName;
             }}></Menu>
@@ -245,4 +248,24 @@ const getInitialGrid = () => {
     grid.push(currentRow);
   }
   return grid;
+};
+
+const clearGridPath = grid => {
+  for (let row = 0; row < 17; row++) {
+    for (let col = 0; col < 70; col++) {
+      const node = {
+        row: row,
+        col: col,
+        cost: Infinity,
+        path: null,
+        isWall: false
+      };
+
+      if (grid[row][col].isWall) {
+        node.isWall = true;
+      }
+
+      grid[row][col] = node;
+    }
+  }
 };
