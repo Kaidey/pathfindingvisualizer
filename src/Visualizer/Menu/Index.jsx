@@ -30,19 +30,32 @@ class Index extends Component {
 					</li>
 					<li
 						className="dropdown-menu-item"
-						onClick={() => this.props.runAlgo()}
+						onClick={() => {
+							if (!this.props.running) {
+								console.log("ran");
+								this.props.runAlgo();
+							}
+						}}
 					>
 						Run
 					</li>
 					<li
 						className="dropdown-menu-item"
-						onClick={() => this.props.clearBoard()}
+						onClick={() => {
+							if (!this.props.running) {
+								this.props.clearBoard();
+							}
+						}}
 					>
 						Clear Board
 					</li>
 					<li
 						className="dropdown-menu-item"
-						onClick={() => this.props.clearPath()}
+						onClick={() => {
+							if (!this.props.running) {
+								this.props.clearPath();
+							}
+						}}
 					>
 						Clear Path
 					</li>

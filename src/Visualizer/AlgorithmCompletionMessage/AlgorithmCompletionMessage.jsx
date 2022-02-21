@@ -1,23 +1,29 @@
-import React from "react";
+import React, { Component } from "react";
 import "./AlgorithmCompletionMessage.css";
 
-const AlgorithmCompletionMessage = props => {
-  const pathExistsMessage = `The ${props.algorithm} algorithm took ${props.elapsedTime}ms to finish!
-  Visited ${props.results.visited.length} nodes and the best path length
-  is ${props.results.sp.length} nodes!`;
+class AlgorithmCompletionMessage extends Component {
+	constructor(props) {
+		super(props);
+	}
 
-  const pathNotFoundMessage =
-    "There is no path from the start node to the end node!";
+	render() {
+		const pathExistsMessage = `The ${this.props.algorithm} algorithm took ${this.props.elapsedTime}ms to finish!
+  Visited ${this.props.results.visited.length} nodes and the best path length
+  is ${this.props.results.sp.length} nodes!`;
 
-  return (
-    <div>
-      {props.display ? (
-        <p id="message">
-          {props.pathExists ? pathExistsMessage : pathNotFoundMessage}
-        </p>
-      ) : null}
-    </div>
-  );
-};
+		const pathNotFoundMessage =
+			"There is no path from the start node to the end node!";
+
+		return (
+			<div>
+				{this.props.display ? (
+					<p id="message">
+						{this.props.pathExists ? pathExistsMessage : pathNotFoundMessage}
+					</p>
+				) : null}
+			</div>
+		);
+	}
+}
 
 export default AlgorithmCompletionMessage;

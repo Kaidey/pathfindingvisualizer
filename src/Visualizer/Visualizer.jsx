@@ -33,8 +33,8 @@ export default class Visualizer extends Component {
 		this.state = {
 			grid: [],
 			running: false,
-			animationComplete: false,
 			mouseDown: false,
+			pathCleared: true,
 		};
 
 		this.nodeToPlace = NODES.WALL;
@@ -124,7 +124,6 @@ export default class Visualizer extends Component {
 				row[j].className = "unvisited";
 			}
 		}
-		this.setState({ animationComplete: false });
 	};
 
 	clearPath = () => {
@@ -143,12 +142,16 @@ export default class Visualizer extends Component {
 				}
 			}
 		}
-		this.setState({ animationComplete: false });
+
+		this.setState({ pathCleared: true });
 	};
 
 	animateAlgo = () => {
 		let i = 1;
 		let timeout = 10;
+
+		this.setState({ running: true });
+
 		const end = this.tableElement.querySelector(
 			`#node_${this.endNode.row}_${this.endNode.col}`
 		);
@@ -169,9 +172,6 @@ export default class Visualizer extends Component {
 				i++;
 			}
 		});
-		setTimeout(() => {
-			this.setState({ animationComplete: true });
-		}, timeout * i);
 	};
 
 	animateSPNodes = (timeout) => {
@@ -188,6 +188,9 @@ export default class Visualizer extends Component {
 				j++;
 			}
 		});
+		setTimeout(() => {
+			this.setState({ running: false, pathCleared: false });
+		}, timeout * 3 * j);
 	};
 
 	runAlgo = () => {
@@ -196,6 +199,9 @@ export default class Visualizer extends Component {
 			this.startNode !== null &&
 			this.endNode !== null
 		) {
+			if (!this.state.pathCleared) {
+				this.clearPath();
+			}
 			import(`../Algorithms/${ALGO_LABELS.get(this.algorithm)}`).then(
 				(algo) => {
 					let algoInstance = new algo.default(
@@ -233,10 +239,11 @@ export default class Visualizer extends Component {
 						updateAlgo={(algoID) => {
 							this.algorithm = algoID;
 						}}
+						running={this.state.running}
 					></Menu>
 				</div>
 				<AlgorithmCompletionMessage
-					display={this.state.animationComplete}
+					display={this.state.running}
 					results={this.results}
 					elapsedTime={this.elapsedTime}
 					algorithm={this.algorithm}
@@ -249,6 +256,7 @@ export default class Visualizer extends Component {
 						setMouseDownTrue={() => this.setState({ mouseDown: true })}
 						mouseDown={this.state.mouseDown}
 						grid={this.state.grid}
+						running={this.state.running}
 					/>
 				</div>
 			</div>

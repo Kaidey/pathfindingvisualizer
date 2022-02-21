@@ -27,6 +27,7 @@ ul.dropdown-menu li {
 	text-transform: uppercase;
 	font-size: 14px;
 	cursor: pointer;
+	user-select: none;
 }
 
 .dropdown-menu li {
