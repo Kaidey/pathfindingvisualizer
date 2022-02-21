@@ -34,12 +34,12 @@ export default class Visualizer extends Component {
 			grid: [],
 			running: false,
 			animationComplete: false,
+			mouseDown: false,
 		};
 
 		this.nodeToPlace = NODES.WALL;
 		this.startNode = null;
 		this.endNode = null;
-		this.mouseDown = false;
 		this.algorithm = null;
 		this.tableElement = null;
 		this.results = { sp: [], visited: [] };
@@ -245,9 +245,9 @@ export default class Visualizer extends Component {
 				<div id="grid">
 					<Grid
 						mouseEventHandler={this.mouseEventHandler}
-						setMouseDownFalse={() => (this.mouseDown = false)}
-						setMouseDownTrue={() => (this.mouseDown = true)}
-						mouseDown={this.mouseDown}
+						setMouseDownFalse={() => this.setState({ mouseDown: false })}
+						setMouseDownTrue={() => this.setState({ mouseDown: true })}
+						mouseDown={this.state.mouseDown}
 						grid={this.state.grid}
 					/>
 				</div>
