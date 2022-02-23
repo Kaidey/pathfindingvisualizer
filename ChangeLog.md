@@ -1,3 +1,23 @@
+# v3.0.0
+
+### Added
+
+- Implemented maze generation (currently only with Kruskal's randomized algorithm)
+- Implemented safeguard that prevents the user from interacting with app controls like "Clear Board" and "Run" while an algorithm is in execution
+
+### Updated
+
+- Grid managment related functions were moved to a separate file
+- All functions that require a call to setState after their execution were changed to return promises. This ensures that setState only executes after
+  said function terminates which was causing some malfunctions before these changes
+
+### Fixed
+
+- App is now interactable with if the algorithm execution finds no path between start and end nodes
+- Issues #28 and #29 were both related to the same problem: after running an algorithm (with a maze or not), the call to "clearBoard" triggered by generating
+  a new maze would not correctly reset the grid data, leaving some cells with property values that pertained to the previous algorithm execution. This would lead
+  to the next algorithm execution: not being able to find a path even tho, visually, there was one; reaching "undefined" objects when iterating over the queue of the algorithm; finding a path that ignored walls which existed only visually and not in the data.
+
 # v2.0.0
 
 ### Added
