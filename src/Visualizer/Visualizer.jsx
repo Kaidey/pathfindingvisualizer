@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Grid from "./Grid/Grid";
 import Menu from "./Menu/Index";
 import AlgorithmCompletionMessage from "./AlgorithmCompletionMessage/AlgorithmCompletionMessage";
+import GridHandlers from "../Helpers/GridHandlers";
 
 import "./Visualizer.css";
 
@@ -45,11 +46,11 @@ export default class Visualizer extends Component {
 		this.tableElement = null;
 		this.results = { sp: [], visited: [] };
 		this.elapsedTime = 0;
-		this.mazeGrid = [];
+		this.gridHandlers = new GridHandlers();
 	}
 
 	componentDidMount() {
-		getInitialGrid().then((cleanGrid) => {
+		this.gridHandlers.getInitialGrid().then((cleanGrid) => {
 			this.setState({
 				grid: cleanGrid,
 			});
@@ -118,7 +119,7 @@ export default class Visualizer extends Component {
 	};
 
 	clearBoard = () => {
-		getInitialGrid().then((cleanGrid) => {
+		this.gridHandlers.getInitialGrid().then((cleanGrid) => {
 			this.setState({
 				grid: cleanGrid,
 				pathCleared: true,
@@ -138,7 +139,9 @@ export default class Visualizer extends Component {
 	};
 
 	clearPath = () => {
-		clearGridPath(this.state.grid);
+		this.gridHandlers.clearGridPath(this.state.grid).then(() => {
+			this.setState({ pathCleared: true });
+		});
 		const rows = document.getElementById("tableBody").children;
 
 		this.startNode.cost = this.endNode.cost = Infinity;
@@ -157,7 +160,6 @@ export default class Visualizer extends Component {
 				}
 			}
 		}
-		this.setState({ pathCleared: true });
 	};
 
 	animateAlgo = () => {
@@ -298,45 +300,3 @@ export default class Visualizer extends Component {
 		);
 	}
 }
-
-const getInitialGrid = () => {
-	return new Promise((resolve, reject) => {
-		const grid = [];
-		for (let row = 0; row < 17; row++) {
-			const currentRow = [];
-			for (let col = 0; col < 70; col++) {
-				currentRow.push({
-					row: row,
-					col: col,
-					distance: Infinity,
-					cost: Infinity,
-					path: null,
-					isWall: false,
-				});
-			}
-			grid.push(currentRow);
-		}
-
-		resolve(grid);
-	});
-};
-
-const clearGridPath = (grid) => {
-	for (let row = 0; row < 17; row++) {
-		for (let col = 0; col < 70; col++) {
-			const node = {
-				row: row,
-				col: col,
-				distance: Infinity,
-				cost: Infinity,
-				path: null,
-				isWall: false,
-			};
-
-			if (grid[row][col].isWall) {
-				node.isWall = true;
-			}
-			grid[row][col] = node;
-		}
-	}
-};
