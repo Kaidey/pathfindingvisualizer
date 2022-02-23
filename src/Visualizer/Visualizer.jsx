@@ -35,6 +35,7 @@ export default class Visualizer extends Component {
 			running: false,
 			mouseDown: false,
 			pathCleared: true,
+			boardCleared: true,
 		};
 
 		this.nodeToPlace = NODES.WALL;
@@ -44,14 +45,16 @@ export default class Visualizer extends Component {
 		this.tableElement = null;
 		this.results = { sp: [], visited: [] };
 		this.elapsedTime = 0;
+		this.mazeGrid = [];
 	}
 
 	componentDidMount() {
-		const grid = getInitialGrid();
-		this.tableElement = document.getElementById("grid");
-		this.setState({
-			grid: grid,
+		getInitialGrid().then((cleanGrid) => {
+			this.setState({
+				grid: cleanGrid,
+			});
 		});
+		this.tableElement = document.getElementById("grid");
 	}
 
 	setNodeToPlace = (nodeId) => {
@@ -66,6 +69,8 @@ export default class Visualizer extends Component {
 		if (cell.className === "unvisited") {
 			cell.className = this.validateNode(clickedCellID);
 		}
+
+		this.setState({ boardCleared: false });
 	};
 
 	//Checks if there is already a start node and an end node
@@ -113,7 +118,13 @@ export default class Visualizer extends Component {
 	};
 
 	clearBoard = () => {
-		this.setState({ grid: getInitialGrid() });
+		getInitialGrid().then((cleanGrid) => {
+			this.setState({
+				grid: cleanGrid,
+				pathCleared: true,
+				boardCleared: true,
+			});
+		});
 		const rows = document.getElementById("tableBody").children;
 		this.startNode = null;
 		this.endNode = null;
@@ -130,6 +141,10 @@ export default class Visualizer extends Component {
 		clearGridPath(this.state.grid);
 		const rows = document.getElementById("tableBody").children;
 
+		this.startNode.cost = this.endNode.cost = Infinity;
+		this.startNode.distance = this.endNode.distance = Infinity;
+		this.startNode.path = this.endNode.path = null;
+
 		for (let i = 0; i < rows.length; i++) {
 			const row = rows[i].children;
 			for (let j = 0; j < row.length; j++) {
@@ -142,14 +157,12 @@ export default class Visualizer extends Component {
 				}
 			}
 		}
-
 		this.setState({ pathCleared: true });
 	};
 
 	animateAlgo = () => {
 		let i = 1;
 		let timeout = 10;
-
 		this.setState({ running: true });
 
 		const end = this.tableElement.querySelector(
@@ -172,6 +185,12 @@ export default class Visualizer extends Component {
 				i++;
 			}
 		});
+
+		if (this.results.sp.length === 0) {
+			setTimeout(() => {
+				this.setState({ running: false });
+			}, timeout * i);
+		}
 	};
 
 	animateSPNodes = (timeout) => {
@@ -191,6 +210,18 @@ export default class Visualizer extends Component {
 		setTimeout(() => {
 			this.setState({ running: false, pathCleared: false });
 		}, timeout * 3 * j);
+	};
+
+	generateMaze = () => {
+		import(`../Mazes/KruskalRandomized`).then((mazeGenerator) => {
+			let mazeGeneratorInstance = new mazeGenerator.default(
+				this.state.grid,
+				this.tableElement
+			);
+			mazeGeneratorInstance.run().then((mazeGrid) => {
+				this.setState({ grid: mazeGrid, boardCleared: false });
+			});
+		});
 	};
 
 	runAlgo = () => {
@@ -240,6 +271,9 @@ export default class Visualizer extends Component {
 							this.algorithm = algoID;
 						}}
 						running={this.state.running}
+						boardCleared={this.state.boardCleared}
+						pathCleared={this.state.pathCleared}
+						maze={this.generateMaze}
 					></Menu>
 				</div>
 				<AlgorithmCompletionMessage
@@ -257,6 +291,7 @@ export default class Visualizer extends Component {
 						mouseDown={this.state.mouseDown}
 						grid={this.state.grid}
 						running={this.state.running}
+						pathCleared={this.state.pathCleared}
 					/>
 				</div>
 			</div>
@@ -265,22 +300,25 @@ export default class Visualizer extends Component {
 }
 
 const getInitialGrid = () => {
-	const grid = [];
-
-	for (let row = 0; row < 17; row++) {
-		const currentRow = [];
-		for (let col = 0; col < 70; col++) {
-			currentRow.push({
-				row: row,
-				col: col,
-				cost: Infinity,
-				path: null,
-				isWall: false,
-			});
+	return new Promise((resolve, reject) => {
+		const grid = [];
+		for (let row = 0; row < 17; row++) {
+			const currentRow = [];
+			for (let col = 0; col < 70; col++) {
+				currentRow.push({
+					row: row,
+					col: col,
+					distance: Infinity,
+					cost: Infinity,
+					path: null,
+					isWall: false,
+				});
+			}
+			grid.push(currentRow);
 		}
-		grid.push(currentRow);
-	}
-	return grid;
+
+		resolve(grid);
+	});
 };
 
 const clearGridPath = (grid) => {
@@ -289,6 +327,7 @@ const clearGridPath = (grid) => {
 			const node = {
 				row: row,
 				col: col,
+				distance: Infinity,
 				cost: Infinity,
 				path: null,
 				isWall: false,
@@ -297,7 +336,6 @@ const clearGridPath = (grid) => {
 			if (grid[row][col].isWall) {
 				node.isWall = true;
 			}
-
 			grid[row][col] = node;
 		}
 	}

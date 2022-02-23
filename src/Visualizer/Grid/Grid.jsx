@@ -23,7 +23,7 @@ class Grid extends Component {
 												id={`node_${rowIdx}_${colIdx}`}
 												className="unvisited"
 												onMouseDown={(event) => {
-													if (!this.props.running) {
+													if (!this.props.running && this.props.pathCleared) {
 														this.props.mouseEventHandler(event);
 														this.props.setMouseDownTrue();
 													}

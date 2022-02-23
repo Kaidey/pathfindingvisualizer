@@ -1,4 +1,4 @@
-export default class Dijkstra {
+export default class AStar {
 	constructor(grid, startNode, endNode) {
 		this.startNode = startNode;
 		this.endNode = endNode;

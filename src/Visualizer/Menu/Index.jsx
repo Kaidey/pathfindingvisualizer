@@ -32,7 +32,6 @@ class Index extends Component {
 						className="dropdown-menu-item"
 						onClick={() => {
 							if (!this.props.running) {
-								console.log("ran");
 								this.props.runAlgo();
 							}
 						}}
@@ -52,12 +51,25 @@ class Index extends Component {
 					<li
 						className="dropdown-menu-item"
 						onClick={() => {
-							if (!this.props.running) {
+							if (!this.props.running && !this.props.pathCleared) {
 								this.props.clearPath();
 							}
 						}}
 					>
 						Clear Path
+					</li>
+					<li
+						className="dropdown-menu-item"
+						onClick={() => {
+							if (!this.props.running) {
+								if (!this.props.boardCleared) {
+									this.props.clearBoard();
+								}
+								this.props.maze();
+							}
+						}}
+					>
+						Kruskal Maze
 					</li>
 				</ul>
 			</nav>
