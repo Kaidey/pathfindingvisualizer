@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import Grid from "./Grid/Grid";
+import Grid from "./Grid/Index";
 import Menu from "./Menu/Index";
-import AlgorithmCompletionMessage from "./AlgorithmCompletionMessage/AlgorithmCompletionMessage";
+import AlgorithmCompletionMessage from "./AlgorithmCompletionMessage/Index";
 import GridHandlers from "../Helpers/GridHandlers";
 
-import "./Visualizer.css";
+import "./Index.css";
 
 const NODES = {
 	WALL: 0,
@@ -28,6 +28,12 @@ const ALGO_LABELS = new Map([
 	[ALGOS.ASTAR, "AStar"],
 ]);
 
+const MAZES = {
+	KRUSKAL: 0,
+};
+
+const MAZE_LABELS = new Map([[MAZES.KRUSKAL, "Kruskal"]]);
+
 export default class Visualizer extends Component {
 	constructor(props) {
 		super(props);
@@ -43,6 +49,7 @@ export default class Visualizer extends Component {
 		this.startNode = null;
 		this.endNode = null;
 		this.algorithm = null;
+		this.mazeGenerator = null;
 		this.tableElement = null;
 		this.results = { sp: [], visited: [] };
 		this.elapsedTime = 0;
@@ -215,15 +222,17 @@ export default class Visualizer extends Component {
 	};
 
 	generateMaze = () => {
-		import(`../Mazes/KruskalRandomized`).then((mazeGenerator) => {
-			let mazeGeneratorInstance = new mazeGenerator.default(
-				this.state.grid,
-				this.tableElement
-			);
-			mazeGeneratorInstance.run().then((mazeGrid) => {
-				this.setState({ grid: mazeGrid, boardCleared: false });
-			});
-		});
+		import(`../Mazes/${MAZE_LABELS.get(this.mazeGenerator)}`).then(
+			(mazeGenerator) => {
+				let mazeGeneratorInstance = new mazeGenerator.default(
+					this.state.grid,
+					this.tableElement
+				);
+				mazeGeneratorInstance.run().then((mazeGrid) => {
+					this.setState({ grid: mazeGrid, boardCleared: false });
+				});
+			}
+		);
 	};
 
 	runAlgo = () => {
@@ -266,16 +275,21 @@ export default class Visualizer extends Component {
 						nodeLabels={NODE_LABELS}
 						algos={ALGOS}
 						algoLabels={ALGO_LABELS}
+						mazes={MAZES}
+						mazeLabels={MAZE_LABELS}
 						runAlgo={this.runAlgo}
 						clearBoard={this.clearBoard}
 						clearPath={this.clearPath}
 						updateAlgo={(algoID) => {
 							this.algorithm = algoID;
 						}}
+						generateMaze={(mazeID) => {
+							this.mazeGenerator = mazeID;
+							this.generateMaze();
+						}}
 						running={this.state.running}
 						boardCleared={this.state.boardCleared}
 						pathCleared={this.state.pathCleared}
-						maze={this.generateMaze}
 					></Menu>
 				</div>
 				<AlgorithmCompletionMessage

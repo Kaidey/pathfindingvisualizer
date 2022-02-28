@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./AlgorithmCompletionMessage.css";
+import "./Index.css";
 
 class AlgorithmCompletionMessage extends Component {
 	constructor(props) {

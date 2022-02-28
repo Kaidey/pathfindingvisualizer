@@ -28,6 +28,21 @@ class Index extends Component {
 							labels={this.props.nodeLabels}
 						></Dropdown>
 					</li>
+					<li className="dropdown-menu-item">
+						Mazes and Patterns
+						<Dropdown
+							elements={this.props.mazes}
+							function={(mazeGenerator) => {
+								if (!this.props.running) {
+									if (!this.props.boardCleared) {
+										this.props.clearBoard();
+									}
+									this.props.generateMaze(mazeGenerator);
+								}
+							}}
+							labels={this.props.mazeLabels}
+						></Dropdown>
+					</li>
 					<li
 						className="dropdown-menu-item"
 						onClick={() => {
@@ -57,19 +72,6 @@ class Index extends Component {
 						}}
 					>
 						Clear Path
-					</li>
-					<li
-						className="dropdown-menu-item"
-						onClick={() => {
-							if (!this.props.running) {
-								if (!this.props.boardCleared) {
-									this.props.clearBoard();
-								}
-								this.props.maze();
-							}
-						}}
-					>
-						Kruskal Maze
 					</li>
 				</ul>
 			</nav>
